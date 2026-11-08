@@ -27,9 +27,10 @@ final class Front
         ]]);
         $router->get('/health', static fn (): array => [200, ['json' => [
             'ok' => true,
-            'seats' => $sample->house()->seats(),
-            'motions' => count($sample->house()->motions()),
-            'records' => count($sample->house()->records()),
+            'services' => count(\Metarchy\Home\Service::ALL),
+            'listings' => count($sample->market()->listings()),
+            'orders' => count($sample->market()->orders()),
+            'uncovered' => count($sample->market()->uncovered()),
         ]]]);
 
         [$status, $body] = $router->handle(

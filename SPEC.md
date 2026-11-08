@@ -1,43 +1,36 @@
 # Metarchy
 
-Metarchy is the governance layer over the InFolk projects. Each project keeps its
-own books. Metarchy keeps the record of who decided what, in which seat, on which
-day, and what the decision changed.
+Metarchy keeps the market for an alternative society. Private companies list the services a government normally supplies, the network lists its own, and a member takes what they need without moving away.
 
 ## Words
 
-- **house**: one body that governs, held in this document as an assembly.
-- **seat**: one voting position inside a house. A seat carries a name and a weight
-  of one. A house holds an odd number of seats so a tie cannot happen.
-- **motion**: one proposal put to a house. It carries a title, the house it went
-  to, the day it opened, and the number of days it stays open.
-- **vote**: one seat answering a motion with `yes`, `no` or `abstain`.
-- **record**: one closed motion together with its result and the day it closed.
+- **society**: one alternative society, held here as a network.
+- **service**: one of the thirteen functions listed below. The service is fixed, so two providers of the same thing sit side by side.
+- **provider**: a private company or the network. It carries a handle, a name and a kind, `company` or `network`.
+- **listing**: one provider offering one service. It carries a price in cents, a delivery term and a bookable flag.
+- **member**: a person who joined the society.
+- **order**: one member taking one listing on one day.
 
-## What a house does
+## The thirteen services
 
-A house opens a motion, and the seats answer. A motion closes when every seat has
-answered or when its window runs out. A motion carries when the yes votes outnumber
-the no votes and the seats that answered reach the quorum. A seat that abstains
-counts towards the quorum and towards neither side.
+civil-registration, market, currency, defence, law-enforcement, courts, education, transport, utilities, sanitation, public-spaces, health, social-security.
 
-A house refuses a motion that names no house, a motion whose window has run out,
-and a second vote from the same seat on the same motion.
+## What the market does
 
-## What a record holds
+A network holds providers, listings and orders. It refuses a listing that names an unknown provider or an unknown service, an empty price, a price of zero, a member that has already joined, an order for a listing that is not bookable, and a second order from the same member on the same listing.
 
-A record names the motion, the house, the day it opened, the day it closed, the
-tally of yes, no and abstain, and the result. A record never changes once written.
-A correction is a new motion.
+The market answers with what a member took, what a provider earned, and which services still have no provider.
 
-## The seat weights
+## What the record holds
 
-Every seat carries weight one in version 1. Weighted seats are out of scope, and a
-motion that needs them is a new draft of this document.
+An order names the member, the listing, the provider, the service, the amount and the day. It stays once written.
+
+## Two orders of the same service
+
+Two companies may hold the same service, and the member picks between them on price and on delivery term. That choice is the whole of the competition.
 
 ## Open in version 1
 
-- What the quorum is. The demo runs a quorum of two thirds of the seats.
-- Whether a seat may hold more than one house. The demo says yes.
-- What happens when a house has no open motion and a seat resigns. The demo keeps
-  the seat until the house fills it.
+- No money moves. An order records an amount that a payment provider would settle.
+- No delivery is tracked. The market records what a member took, and who offered it.
+

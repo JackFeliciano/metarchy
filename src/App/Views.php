@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Metarchy\App;
 
-use Metarchy\Home\Motion;
+use Metarchy\Home\Listing;
 use Metarchy\Home\Sample;
+use Metarchy\Home\Service;
 
 /**
  * The HTML. Every string reaching the page goes through h(), so a title with an
@@ -47,51 +48,42 @@ HTML;
         return "</main>\n</body>\n</html>\n";
     }
 
-    public function front(Sample $sample): string
+    public function front(Sample $market): string
     {
-        $house = $sample->house();
-        $TITLE = 'Metarchy, a house that records its decisions';
-        $LEDE = 'Metarchy is the governance layer for the InFolk projects, where houses decide motions through recorded votes.';
-        $WHAT = 'A house holds an odd number of seats, and each seat can open a motion. The motion names its house, opening day and voting window in days. Each seat can answer once with yes, no or abstain. A motion closes when every seat has answered or its window expires. At least two thirds of the seats, rounded up, must answer. The motion carries when yes votes outnumber no votes and the answers reach quorum. Abstentions count towards quorum but neither side.';
+        $TITLE = 'Metarchy, a market for an alternative society';
+        $LEDE = 'Metarchy lets people build an alternative society within the one they already live in, with access to essential services through a shared marketplace.';
+        $WHAT = 'Metarchy brings together private companies and network services to provide the essential functions of a government, from civil registration and currency to education, healthcare, transport and public safety. Members can find, choose and pay for services in one place, creating an alternative society without leaving their existing community.';
 
+        $m = $market->market();
         $out = $this->header($TITLE);
         $out .= '<h1>' . $this->h($TITLE) . '</h1>' . "\n";
         $out .= '<p class="lede">' . $this->h($LEDE) . '</p>' . "\n";
         $out .= '<p>' . $this->h($WHAT) . '</p>' . "\n";
-        $out .= '<p class="stage">' . $this->h($house->name) . '. Seats: ' . $house->seats()
-            . '. Quorum: ' . (new Motion('x', $house->name, '2026-01-01', 1, $house->seats()))->quorum()
-            . ' of ' . $house->seats() . '. Motions: ' . count($house->motions())
-            . '. Records: ' . count($house->records()) . '.</p>' . "\n";
+        $out .= '<p class="stage">Services: ' . count(Service::ALL) . '. Listings: ' . count($m->listings())
+            . '. Orders: ' . count($m->orders()) . '. Without a provider: ' . count($m->uncovered()) . '.</p>' . "\n";
 
-        $out .= '<h2>Open motions</h2>' . "\n";
-        $out .= '<div class="motions">' . "\n";
-        foreach ($house->motions() as $motion) {
-            $out .= $this->motion($motion);
+        $out .= '<h2>The market</h2>' . "\n";
+        $out .= '<div class="listings">' . "\n";
+        $listings = $m->listings();
+        usort($listings, static fn (\Metarchy\Home\Listing $a, \Metarchy\Home\Listing $b): int => [$a->service->handle, $a->cents] <=> [$b->service->handle, $b->cents]);
+        foreach ($listings as $listing) {
+            $out .= $this->listing($m->provider($listing->provider), $listing);
         }
         $out .= '</div>' . "\n";
 
-        $out .= '<h2>Records</h2>' . "\n";
-        if ($house->records() === []) {
-            $out .= '<p class="where">The house has closed no motion.</p>' . "\n";
+        $out .= '<h2>Services without a provider</h2>' . "\n";
+        if ($m->uncovered() === []) {
+            $out .= '<p class="where">Every service carries at least one listing.</p>' . "\n";
         } else {
-            $out .= '<table class="records"><thead><tr><th>Motion</th><th>Opened</th><th>Closed</th><th>Yes</th><th>No</th><th>Abstain</th><th>Result</th></tr></thead><tbody>' . "\n";
-            foreach ($house->records() as $record) {
-                $out .= '<tr><td>' . $this->h((string) $record['title']) . '</td><td>' . $this->h((string) $record['opened'])
-                    . '</td><td>' . $this->h((string) $record['closed']) . '</td><td class="num">' . $record['tally']['yes']
-                    . '</td><td class="num">' . $record['tally']['no'] . '</td><td class="num">' . $record['tally']['abstain']
-                    . '</td><td>' . $this->h((string) $record['result']) . '</td></tr>' . "\n";
-            }
-            $out .= '</tbody></table>' . "\n";
+            $out .= '<p class="where">' . $this->h(implode(', ', array_map(static fn (string $s): string => str_replace('-', ' ', $s), $m->uncovered()))) . '.</p>' . "\n";
         }
 
-        $out .= '<h2>What the house does</h2>' . "\n";
+        $out .= '<h2>What the market does</h2>' . "\n";
         $out .= '<ol class="steps">' . "\n";
         foreach ([
-            ['Seats a house', 'The house holds an odd number of seats.'],
-            ['Opens a motion', 'A seat opens a motion with its house, opening day and voting window.'],
-            ['Casts a vote', 'Each seat answers once with yes, no or abstain.'],
-            ['Closes the motion', 'The motion closes when every seat answers or its voting window expires.'],
-            ['Writes the record', 'The system records the outcome permanently when the motion closes.'],
+            ['Explore the marketplace', 'find the services available from private companies and the network.'],
+            ['Choose the service you need', 'take it through the marketplace.'],
+            ['Pay for your chosen service', 'and use it while continuing to live in your existing society.'],
         ] as [$step, $line]) {
             $out .= '<li><strong>' . $this->h($step) . '</strong> ' . $this->h($line) . '</li>' . "\n";
         }
@@ -101,17 +93,22 @@ HTML;
         return $out;
     }
 
-    private function motion(Motion $motion): string
+    private function listing(\Metarchy\Home\Provider $provider, Listing $listing): string
     {
-        $tally = $motion->tally();
-        $out = '<article class="motion">' . "\n";
-        $out .= '<h3>' . $this->h($motion->title) . '</h3>' . "\n";
-        $out .= '<p class="where">Opened ' . $this->h($motion->opened) . ', closes ' . $this->h($motion->closes())
-            . '. Answered ' . $motion->answered() . ' of ' . $motion->seats . '. Quorum ' . $motion->quorum() . '.</p>' . "\n";
-        $out .= '<p class="where">Yes ' . $tally['yes'] . ', no ' . $tally['no'] . ', abstain ' . $tally['abstain'] . '.</p>' . "\n";
+        $out = '<article class="listing">' . "\n";
+        $out .= '<h3>' . $this->h(str_replace('-', ' ', $listing->service->handle)) . '</h3>' . "\n";
+        $out .= '<p class="where">' . $this->h($provider->name) . ($provider->isNetwork() ? ' (the network)' : '') . '</p>' . "\n";
+        $out .= '<p class="price">' . $this->money($listing->cents) . '</p>' . "\n";
+        $out .= '<p class="terms">Delivery in ' . $listing->days . ' day' . ($listing->days === 1 ? '' : 's')
+            . ($listing->bookable ? '.' : '. Not bookable.') . '</p>' . "\n";
         $out .= '</article>' . "\n";
 
         return $out;
+    }
+
+    private function money(int $cents): string
+    {
+        return $cents === 0 ? 'No charge' : number_format($cents / 100, 2, '.', ',');
     }
 
     public function missing(): string

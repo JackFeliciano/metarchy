@@ -1,78 +1,33 @@
 # Metarchy
 
-## What the project is
+Metarchy runs a market where private companies offer the services a government normally supplies. A member takes those services and keeps living where they are.
 
-Metarchy is a PHP 8.3 programme that provides the governance layer over the InFolk projects. It models houses, seats, motions, votes and permanent records.
+## What a market holds
 
-A house holds an odd number of seats. A seat can open a motion that names its house, opening day and voting window in days. Each seat answers once with yes, no or abstain.
+- **service**: one of thirteen functions, from civil registration and currency to courts, education, transport and social security.
+- **provider**: a private company, or the network itself.
+- **listing**: one provider offering one service, at a price in cents and on a delivery term.
+- **member**: a person who joined the society.
+- **order**: one member taking one listing on one day.
 
-A motion closes when every seat has answered or its voting window expires. Quorum requires answers from at least two thirds of the seats, rounded up. A motion carries when yes votes outnumber no votes and the answers reach quorum. Abstentions count towards quorum but towards neither side.
+## What the market refuses
 
-When a motion closes, the programme writes a record of its outcome. The record never changes.
+A listing for an unknown provider or an unknown service. A listing with no price. A member who joins twice. An order for a listing that is not bookable. A second order from the same member on the same listing.
 
-The demo contains 1 house with 5 seats, 3 motions and 2 records. One record shows a motion that carried. Another shows a motion that lost on quorum. The third motion remains open.
+## What it answers
 
-The programme uses plain PHP 8.3. It requires no Composer and no packages.
+What one member took, what one provider earned, the cheapest listing for a service, and which services still have no provider.
 
-## How to run it
+## Running it
 
-Run the test suite from the repository root:
+    php showroom/index.php
 
-```bash
-php tests/run.php
-```
+The demonstration runs on PHP 8 with no dependencies. Two providers of the same service sit side by side, so a member compares them on price and on delivery term.
 
+## Tests
 
-Start the demo with PHP's built-in server:
-
-```bash
-php -S 127.0.0.1:8106 -t showroom showroom/index.php
-```
-
-
-The application uses / as its default URL prefix. If a proxy passes a different prefix, set METARCHY_BASE to that value.
-
-## What the routes answer
-
-The demo exposes 2 routes.
-
-`/` renders the house, its open motions and its records.
-
-`/health` answers with the seat count, motion count and record count.
-
-The home route shows the current governance state. Visitors can see the house structure, motions awaiting closure and records of completed motions.
-
-The health route provides the counts for the house and its governance activity.
-
-## How the layout is arranged
-
-The repository separates governance logic from request handling, presentation, tests and deployment files.
-
-`src/Home/` holds `Seat`, `Vote`, `Motion`, `House` and `Sample`.
-
-`src/App/` holds the router, the front controller and the HTML.
-
-`showroom/` holds the entry file and the stylesheet.
-
-`tests/` holds the test suite.
-
-`deploy/` holds the systemd unit and the nginx location block.
-
-`SPEC.md` describes the governance model.
-
-The specification states the project vocabulary, the rules of a house, what a record holds and 3 things that version 1 leaves open.
-
-## The state of the suite
-
-The repository includes a hand-written test runner with 16 checks. Run all checks with:
-
-```bash
-php tests/run.php
-```
-
-The runner requires no package installation or external test framework. It provides a direct way to check the programme from the command line.
+    php tests/run.php
 
 ## Licence
 
-The repository uses the Mozilla Public License 2.0 (MPL 2.0). You may use, modify and distribute the code. You must publish changes to files covered by the licence.
-
+Mozilla Public License 2.0. See LICENSE.
