@@ -45,6 +45,11 @@ p { margin: 0 0 1rem; }
 
 .listing .price { font-size: 1.05rem; margin: 0 0 0.35rem; }
 
+table.orders { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 0.6rem; }
+table.orders th, table.orders td { text-align: left; padding: 0.32rem 0.45rem; border-bottom: 1px solid var(--rule); }
+table.orders th { color: #666; font-weight: normal; }
+table.orders td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
 .where { font-size: 0.9rem; color: #444; margin: 0 0 0.35rem; }
 
 

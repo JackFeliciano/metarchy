@@ -71,6 +71,15 @@ HTML;
         }
         $out .= '</div>' . "\n";
 
+        $out .= '<h2>What members took</h2>' . "\n";
+        $out .= '<table class="orders"><thead><tr><th>Member</th><th>Service</th><th>Provider</th><th>Day</th><th>Paid</th></tr></thead><tbody>' . "\n";
+        foreach ($m->orders() as $order) {
+            $out .= '<tr><td>' . $this->h($order->member) . '</td><td>' . $this->h(str_replace('-', ' ', $order->service))
+                . '</td><td>' . $this->h($m->provider($order->provider)->name) . '</td><td>' . $this->h($order->day)
+                . '</td><td class="num">' . $this->money($order->cents) . '</td></tr>' . "\n";
+        }
+        $out .= '</tbody></table>' . "\n";
+
         $out .= '<h2>Services without a provider</h2>' . "\n";
         if ($m->uncovered() === []) {
             $out .= '<p class="where">Every service carries at least one listing.</p>' . "\n";

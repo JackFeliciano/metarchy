@@ -123,6 +123,12 @@ final class Market
         return $sum;
     }
 
+    /** A listing by handle, so a caller can read what a member took. */
+    public function listing(string $handle): ?Listing
+    {
+        return $this->listings[$handle] ?? null;
+    }
+
     /** The cheapest listing for a service, or null when nobody offers it. */
     public function cheapest(string $service): ?Listing
     {
