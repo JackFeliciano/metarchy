@@ -51,8 +51,8 @@ HTML;
     public function front(Sample $market): string
     {
         $TITLE = 'Metarchy, a market for an alternative society';
-        $LEDE = 'Metarchy lets people build an alternative society within the one they already live in, with access to essential services through a shared marketplace.';
-        $WHAT = 'Metarchy brings together private companies and network services to provide the essential functions of a government, from civil registration and currency to education, healthcare, transport and public safety. Members can find, choose and pay for services in one place, creating an alternative society without leaving their existing community.';
+        $LEDE = 'Metarchy creates alternative societies inside an existing one, following panarchy, with private companies and network services supplying the functions government normally provides.';
+        $WHAT = 'The interstitial model lets a member meet their needs through a shared marketplace without relocating or leaving the communities they belong to. A provider lists a function with a price, and the member chooses among providers while staying where they are.';
 
         $m = $market->market();
         $out = $this->header($TITLE);
@@ -90,9 +90,9 @@ HTML;
         $out .= '<h2>What the market does</h2>' . "\n";
         $out .= '<ol class="steps">' . "\n";
         foreach ([
-            ['Explore the marketplace', 'find the services available from private companies and the network.'],
-            ['Choose the service you need', 'take it through the marketplace.'],
-            ['Pay for your chosen service', 'and use it while continuing to live in your existing society.'],
+            ['Open the service', 'Private companies and the network itself list services in the functions government usually supplies.'],
+            ['Choose the provider', 'The member finds the service in the shared marketplace and picks the provider that suits their need.'],
+            ['Pay through the market', 'The member pays through the marketplace, and the society grows without anyone moving.'],
         ] as [$step, $line]) {
             $out .= '<li><strong>' . $this->h($step) . '</strong> ' . $this->h($line) . '</li>' . "\n";
         }

@@ -1,6 +1,11 @@
 # Metarchy
 
-Metarchy runs a market where private companies offer the services a government normally supplies. A member takes those services and keeps living where they are.
+Metarchy creates alternative societies inside an existing one, following panarchy, with
+private companies and network services supplying the functions government normally
+provides.
+
+The interstitial model lets a member meet their needs through a shared marketplace without
+relocating or leaving the communities they belong to.
 
 ## What a market holds
 
